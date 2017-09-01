@@ -85,19 +85,19 @@ function makeQuery(weight)
 
 function spawnReqsQueries()
 {
-	while (reqs_counterProgress < reqs_concurrentQueries)
-	{
-		if (reqs_counter+reqs_counterProgress < reqs_querieslimit)
-		{
-			makeQuery($('#idReqsWeight').val());
-			reqs_counterProgress += 1;
-		}
-		else
-		{
-			break;
-		}
-	}
-	return (reqs_counter+reqs_counterProgress < reqs_querieslimit); 
+  while (reqs_counterProgress < reqs_concurrentQueries)
+  {
+    if (reqs_counter+reqs_counterProgress < reqs_querieslimit)
+    {
+      makeQuery($('#idReqsWeight').val());
+      reqs_counterProgress += 1;
+    }
+    else
+    {
+      break;
+    }
+  }
+  return (reqs_counter+reqs_counterProgress < reqs_querieslimit); 
 }
 
 
@@ -106,17 +106,17 @@ function startTest1()
 {
   reqs_testStartTimestamp = getTime();
   reqs_concurrentQueries = $('#idReqsConcurrency').val();
-	reqs_total_respTimeArr = [];
-	reqs_counter = 0;
-	reqs_counterProgress = 0;
-	reqs_querieslimit = $('#idReqsCount').val();
-	
-	$('#idRespCounter').text(reqs_counter + ' / ' + reqs_querieslimit);
-	
-	setTimeout(function(){
-		if (spawnReqsQueries())
-			 setTimeout(arguments.callee, 10);
-	}, 10);
+  reqs_total_respTimeArr = [];
+  reqs_counter = 0;
+  reqs_counterProgress = 0;
+  reqs_querieslimit = $('#idReqsCount').val();
+
+  $('#idRespCounter').text(reqs_counter + ' / ' + reqs_querieslimit);
+
+  setTimeout(function(){
+    if (spawnReqsQueries())
+      setTimeout(arguments.callee, 10);
+  }, 10);
 }
 
 
@@ -129,22 +129,22 @@ function main()
 
 <div style="border:1px solid black; padding:10px;">
 
-	<h3>test1</h3>
-	
+  <h3>test1</h3>
+
   <span>concurrency: </span>
-	<input id="idReqsConcurrency" type="text" value="10"/>
-	<br>
-	<span>requests count: </span>
-	<input id="idReqsCount" type="text" value="100"/>
-	<br>
-	<span>each request weight: </span>
-	<input id="idReqsWeight" type="text" value="9000000"/>
-	<br>
-	<button type="button" onclick="javascript:startTest1()">start test</button>
-	<br/>
-	<br/>
+  <input id="idReqsConcurrency" type="text" value="10"/>
+  <br>
+  <span>requests count: </span>
+  <input id="idReqsCount" type="text" value="100"/>
+  <br>
+  <span>each request weight: </span>
+  <input id="idReqsWeight" type="text" value="9000000"/>
+  <br>
+  <button type="button" onclick="javascript:startTest1()">start test</button>
+  <br/>
+  <br/>
   <div id="idRespCounter"></div>
-	<div id="idResp"></div>
+  <div id="idResp"></div>
 
 </div>
 
