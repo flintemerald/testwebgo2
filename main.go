@@ -12,6 +12,7 @@ import (
   "math/rand"
   "time"
 
+  "./db"
   "./api"
 )
 
@@ -21,7 +22,7 @@ type config struct {
   ListenSpec string
   GoMaxProcs int
 
-  // Db db.Config
+  Db db.Config
   API api.Config
 }
 
@@ -50,7 +51,7 @@ func processFlags() *config {
   cfg := &config{}
   flag.StringVar(&cfg.ListenSpec, "listen", "localhost:8080", "HTTP listen spec")
   flag.IntVar(&cfg.GoMaxProcs, "gomaxprocs", 0, "GOMAXPROCS, 0==defalut")
-  //flag.StringVar(&cfg.Db.ConnectString, "db-connect", "host=/var/run/postgresql dbname=gowebapp sslmode=disable", "DB Connect String")
+  flag.StringVar(&cfg.Db.ConnectString, "db-connect", "host=localhost user=testwebgo password=2kgf85h437dng47m dbname=testwebgo sslmode=disable", "DB Connect String")
   flag.StringVar(&cfg.API.StaticPath, "static-path", "static", "Path to static files dir")
 
   flag.Parse()
@@ -68,6 +69,7 @@ func run(cfg *config) error {
     return err
   }
 
+  db.Init(cfg.Db)
   api.Start(cfg.API, l)
 
   waitForSignal()
