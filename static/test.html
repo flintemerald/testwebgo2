@@ -24,61 +24,61 @@ var reqs_querieslimit = 1;
 function finishTest()
 {
   var total_testTime = (getTime() - reqs_testStartTimestamp) / 1000;
-	var total_respTime_avg = 0;
-	for (var i = 0; i < reqs_total_respTimeArr.length; ++i)
-		total_respTime_avg += parseFloat(reqs_total_respTimeArr[i]);
-	total_respTime_avg = total_respTime_avg / reqs_total_respTimeArr.length;
-	
+  var total_respTime_avg = 0;
+  for (var i = 0; i < reqs_total_respTimeArr.length; ++i)
+    total_respTime_avg += parseFloat(reqs_total_respTimeArr[i]);
+  total_respTime_avg = total_respTime_avg / reqs_total_respTimeArr.length;
+
   //alert(JSON.stringify(reqs_total_respTimeArr));
   
-	res = '';
-	// res += '<span>each_query_resultSize: ' + (json_resultSize/1024).toFixed(1) + ' kb</span>'
-	// res += '<br>';
-	//res += '<br>';
-	res += '<table>';
-	res += '<tr><td>total_respTime_avg:</td><td>' + (total_respTime_avg*1000).toFixed(2) + ' ms&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>'
+  res = '';
+  // res += '<span>each_query_resultSize: ' + (json_resultSize/1024).toFixed(1) + ' kb</span>'
+  // res += '<br>';
+  //res += '<br>';
+  res += '<table>';
+  res += '<tr><td>total_respTime_avg:</td><td>' + (total_respTime_avg*1000).toFixed(2) + ' ms&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>'
   res += '<td>total_testTime:</td><td>' + (total_testTime*1000).toFixed(2) + ' ms</td></tr>'
-	res += '</table>';
-	//res += '<br>';
-	
-	$('#idResp').html($('#idResp').html() + res);
+  res += '</table>';
+  //res += '<br>';
+
+  $('#idResp').html($('#idResp').html() + res);
 }
 
 
 
 function makeQuery(weight)
 {
-	var params = {};
-	params.weight = weight;
-	
-	var timestamp = getTime();
-	
-	$.ajax({
-	   	method:'post',
-      contentType: 'application/json; charset=utf-8',
-	   	data:JSON.stringify(params),
-      url:'/testapi/test1/',
-	   	success:onComplete,
-	   	error:onError,
-	   	//headers: { 'Authorization': 'Token ' + auth_token },
-	   	});
-      
-	function onComplete(data, textStatus, jqXHR)
-	{
-		reqs_total_respTimeArr.push((getTime() - timestamp)/1000);
-		reqs_counter += 1;
-		reqs_counterProgress -= 1;
+  var params = {};
+  params.weight = weight;
 
-		$('#idRespCounter').text(reqs_counter + ' / ' + reqs_querieslimit);
-		
-		if (reqs_counter >= reqs_querieslimit)
-			finishTest();
-	}
-	
-	function onError(XMLHttpRequest, textStatus, errorThrown)
-	{
-		$('#idResp').text(XMLHttpRequest.responseJSON);
-	}
+  var timestamp = getTime();
+
+  $.ajax({
+    method:'post',
+    contentType: 'application/json; charset=utf-8',
+    data:JSON.stringify(params),
+    url:'/testapi/test1/',
+    success:onComplete,
+    error:onError,
+    //headers: { 'Authorization': 'Token ' + auth_token },
+  });
+      
+  function onComplete(data, textStatus, jqXHR)
+  {
+    reqs_total_respTimeArr.push((getTime() - timestamp)/1000);
+    reqs_counter += 1;
+    reqs_counterProgress -= 1;
+
+    $('#idRespCounter').text(reqs_counter + ' / ' + reqs_querieslimit);
+
+    if (reqs_counter >= reqs_querieslimit)
+      finishTest();
+  }
+
+  function onError(XMLHttpRequest, textStatus, errorThrown)
+  {
+    $('#idResp').text(XMLHttpRequest.responseJSON);
+  }
 }
 
 
