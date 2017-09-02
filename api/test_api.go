@@ -10,7 +10,6 @@ import (
   "crypto/sha1"
   "encoding/hex"
 
-  "../db"
   "../utils"
 )
 
@@ -37,24 +36,5 @@ func test1Api() http.Handler {
     resDict["answer"] = hex.EncodeToString(sum[:])
     resString, _ := json.Marshal(resDict)
     fmt.Fprintf(w, string(resString))
-  })
-}
-
-
-
-func getProductsListApi() http.Handler {
-  return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-    resDict := make(map[string]interface{})
-    resDict["answer"] = db.GetProductsList()
-    resDict["status"] = "ok"
-    resString, _ := json.Marshal(resDict)
-    fmt.Fprintf(w, string(resString))
-  })
-}
-
-
-
-func getProductApi() http.Handler {
-  return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
   })
 }

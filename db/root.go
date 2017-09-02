@@ -1,7 +1,7 @@
 package db
 
 import (
-  "database/sql"
+  "github.com/jmoiron/sqlx"
   _ "github.com/lib/pq"
 )
 
@@ -13,13 +13,13 @@ type Config struct {
 
 
 
-var con *sql.DB
+var con *sqlx.DB
 
 
 
 func Init(cfg Config) {
   var err error
-  con, err = sql.Open("postgres", cfg.ConnectString)
+  con, err = sqlx.Open("postgres", cfg.ConnectString)
   if err != nil {
     panic(err)
   }
