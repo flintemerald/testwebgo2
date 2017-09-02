@@ -9,6 +9,7 @@ type ProductCompact struct {
   Id int64
   Name_rus string
   Name_eng string
+  Price int64
 }
 
 
@@ -24,5 +25,4 @@ type ProductFull struct {
   Capacity int32
   Description string
   Grape_sort string
-  Price int64
 }

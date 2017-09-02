@@ -5,6 +5,116 @@
 <script src="jquery.cookie.js"></script>
 <script type="text/javascript">
 
+function showProductToEdit(prod)
+{
+  $('#idEdit_Id').text(prod.Id);
+  $('#idEdit_Name_rus').val(prod.Name_rus);
+  $('#idEdit_Name_eng').val(prod.Name_eng);
+  $('#idEdit_Photo_url').val(prod.Photo_url);
+  $('#idEdit_Year').val(prod.Year);
+  $('#idEdit_Vendor_code').val(prod.Vendor_code);
+  $('#idEdit_Country').val(prod.Country);
+  $('#idEdit_Alc_vol').val(prod.Alc_vol);
+  $('#idEdit_Capacity').val(prod.Capacity);
+  $('#idEdit_Description').val(prod.Description);
+  $('#idEdit_Grape_sort').val(prod.Grape_sort);
+  $('#idEdit_Price').val(prod.Price);
+  $('#idEditProduct').show();
+}
+
+
+
+function editProductSave()
+{
+  $('#idRespStatus').html('loading... please wait...');
+
+  var params = {};
+  params.product = {}
+  params.product.Name_rus = $("#idEdit_Name_rus").val();
+  params.product.Name_eng = $("#idEdit_Name_eng").val();
+  params.product.Photo_url = $("#idEdit_Photo_url").val();
+  params.product.Year = $("#idEdit_Year").val();
+  params.product.Vendor_code = $("#idEdit_Vendor_code").val();
+  params.product.Country = $("#idEdit_Country").val();
+  params.product.Alc_vol = $("#idEdit_Alc_vol").val();
+  params.product.Capacity = $("#idEdit_Capacity").val();
+  params.product.Description = $("#idEdit_Description").val();
+  params.product.Grape_sort = $("#idEdit_Grape_sort").val();
+  params.product.Price = $("#idEdit_Price").val();
+  
+  params.update_product_id = $('#idEdit_Id').text();
+
+  $.ajax({
+     	method:'post',
+     	contentType: 'application/json; charset=utf-8',
+     	data:JSON.stringify(params),
+     	dataType: 'json',
+     	url:'/testapi/save_product/',
+     	success:onComplete,
+     	error:onError,
+     	//headers: { 'Authorization': 'Token ' + auth_token },
+     	});
+
+  function onComplete(data, textStatus, jqXHR)
+  {
+    if (data.status && (data.status == 'ok'))
+    {
+      $('#idRespStatus').text(data.status);
+      getProductsList();
+    }
+    else
+    {
+      $('#idRespStatus').html('fail, ' + JSON.stringify(data));
+    }
+  }
+
+  function onError(XMLHttpRequest, textStatus, errorThrown)
+  {
+    $('#idRespStatus').html(JSON.stringify(XMLHttpRequest.responseJSON));
+  }
+}
+
+
+
+function editProduct(productId)
+{
+  $('#idRespStatus').html('loading... please wait...');
+
+  var params = {};
+  params.product_id = productId;
+
+  $.ajax({
+     	method:'post',
+     	contentType: 'application/json; charset=utf-8',
+     	data:JSON.stringify(params),
+     	dataType: 'json',
+     	url:'/testapi/get_product/',
+     	success:onComplete,
+     	error:onError,
+     	//headers: { 'Authorization': 'Token ' + auth_token },
+     	});
+
+  function onComplete(data, textStatus, jqXHR)
+  {
+    if (data.status && (data.status == 'ok'))
+    {
+      $('#idRespStatus').text(data.status);
+      showProductToEdit(data.answer);
+    }
+    else
+    {
+      $('#idRespStatus').html('fail, ' + JSON.stringify(data));
+    }
+  }
+
+  function onError(XMLHttpRequest, textStatus, errorThrown)
+  {
+    $('#idRespStatus').html(JSON.stringify(XMLHttpRequest.responseJSON));
+  }
+}
+
+
+
 function deleteProduct(productId)
 {
   $('#idRespStatus').html('loading... please wait...');
@@ -66,7 +176,7 @@ function genRespTable(arr)
         key = keys[k];
         res += '<td>'+row[key]+'</td>';
       }
-      res += '<td><b><a href="javascript:void(0)">edit</a></b></td>';
+      res += '<td><b><a href="javascript:void(0)" onclick="javascript:editProduct('+row['Id']+')">edit</a></b></td>';
       res += '<td><b><a href="javascript:void(0)" onclick="javascript:deleteProduct('+row['Id']+')">delete</a></b></td>';
       res += '</tr>';
     }
@@ -142,7 +252,7 @@ function addNewProduct()
      	contentType: 'application/json; charset=utf-8',
      	data:JSON.stringify(params),
      	dataType: 'json',
-     	url:'/testapi/add_new_product/',
+     	url:'/testapi/save_product/',
      	success:onComplete,
      	error:onError,
      	//headers: { 'Authorization': 'Token ' + auth_token },
@@ -181,6 +291,26 @@ function main()
 <br>
 <br>
 <div id="idProductsList"></div>
+<br>
+<!-- <a href="javascript:void(0)" onclick="javascript:$('#idEditProduct').toggle();">edit_product...</a> -->
+<div id="idEditProduct" style="display:none;"><div style="display:inline-block; border: 1px solid black;">
+  <h5>edit_product</h5>
+  <table>
+    <tr><td>Id</td><td><span id="idEdit_Id"></span></td></tr>
+    <tr><td>Name_rus</td><td><input id="idEdit_Name_rus" type="text" value=""/></td></tr>
+    <tr><td>Name_eng</td><td><input id="idEdit_Name_eng" type="text" value=""/></td></tr>
+    <tr><td>Photo_url</td><td><input id="idEdit_Photo_url" type="text" value=""/></td></tr>
+    <tr><td>Year</td><td><input id="idEdit_Year" type="text" value=""/></td></tr>
+    <tr><td>Vendor_code</td><td><input id="idEdit_Vendor_code" type="text" value=""/></td></tr>
+    <tr><td>Country</td><td><input id="idEdit_Country" type="text" value=""/></td></tr>
+    <tr><td>Alc_vol</td><td><input id="idEdit_Alc_vol" type="text" value=""/></td></tr>
+    <tr><td>Capacity</td><td><input id="idEdit_Capacity" type="text" value=""/></td></tr>
+    <tr><td>Description</td><td><input id="idEdit_Description" type="text" value=""/></td></tr>
+    <tr><td>Grape_sort</td><td><input id="idEdit_Grape_sort" type="text" value=""/></td></tr>
+    <tr><td>Price</td><td><input id="idEdit_Price" type="text" value=""/></td></tr>
+  </table>
+  <button onclick="javascript:editProductSave();">save</button>
+</div></div>
 <br>
 <a href="javascript:void(0)" onclick="javascript:$('#idNewProduct').toggle();">add_new_product...</a>
 <div id="idNewProduct" style="display:none;"><div style="display:inline-block; border: 1px solid black;">

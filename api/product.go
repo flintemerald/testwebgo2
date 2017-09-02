@@ -26,12 +26,21 @@ func getProductsListApi() http.Handler {
 
 func getProductApi() http.Handler {
   return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+    body, _ := ioutil.ReadAll(r.Body)
+    dict := make(map[string]interface{})
+    json.Unmarshal(body, &dict)
+    product_id := utils.GetInt64FromDict(dict, "product_id")
+    resDict := make(map[string]interface{})
+    resDict["status"] = "ok"
+    resDict["answer"] = db.GetProduct(product_id)
+    resString, _ := json.Marshal(resDict)
+    fmt.Fprintf(w, string(resString))
   })
 }
 
 
 
-func addNewProductApi() http.Handler {
+func saveProductApi() http.Handler {
   return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
     body, _ := ioutil.ReadAll(r.Body)
     dict := make(map[string]interface{})
@@ -49,7 +58,12 @@ func addNewProductApi() http.Handler {
     prod.Description = dictProd["Description"].(string)
     prod.Grape_sort = dictProd["Grape_sort"].(string)
     prod.Price = utils.GetInt64FromDict(dictProd, "Price")
-    db.AddNewProduct(prod)
+    if _, ok := dict["update_product_id"]; ok {
+      update_product_id := utils.GetInt64FromDict(dict, "update_product_id")
+      db.UpdateProduct(update_product_id, prod)
+    } else {
+      db.AddNewProduct(prod)
+    }
     resDict := make(map[string]interface{})
     resDict["status"] = "ok"
     resString, _ := json.Marshal(resDict)
