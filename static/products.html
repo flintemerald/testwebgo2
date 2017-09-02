@@ -10,7 +10,7 @@ function deleteProduct(productId)
   $('#idRespStatus').html('loading... please wait...');
 
   var params = {};
-  params.product_id = ""+productId;
+  params.product_id = productId;
 
   $.ajax({
      	method:'post',

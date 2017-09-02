@@ -3,6 +3,7 @@ package utils
 import (
   "math/rand"
   "strconv"
+  "fmt"
 )
 
 
@@ -27,6 +28,14 @@ func GetInt32FromDict(dict map[string]interface{}, name string) int32 {
 
 
 func GetInt64FromDict(dict map[string]interface{}, name string) int64 {
-  res, _ := strconv.ParseInt(dict[name].(string), 10, 64)
+  unk := dict[name]
+  var s string
+  switch unk.(type) {
+  case string:
+    s = unk.(string)
+  case float64:
+    s = fmt.Sprintf("%.0f", unk.(float64))
+  }
+  res, _ := strconv.ParseInt(s, 10, 64)
   return int64(res)
 }
