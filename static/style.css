@@ -1,0 +1,19 @@
+.contentTable
+{
+  border-collapse: collapse;
+  font-size: 9pt;
+  color: #222222;
+  margin: 0px;
+  padding: 0px;
+}
+
+.contentTable tr
+{
+  margin: 0px;
+  padding: 0px;
+}
+
+.contentTable td
+{
+  border: 1px solid #666666;
+}

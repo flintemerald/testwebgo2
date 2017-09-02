@@ -5,6 +5,82 @@
 <script src="jquery.cookie.js"></script>
 <script type="text/javascript">
 
+function deleteProduct(productId)
+{
+  $('#idRespStatus').html('loading... please wait...');
+
+  var params = {};
+  params.product_id = ""+productId;
+
+  $.ajax({
+     	method:'post',
+     	contentType: 'application/json; charset=utf-8',
+     	data:JSON.stringify(params),
+     	dataType: 'json',
+     	url:'/testapi/delete_product/',
+     	success:onComplete,
+     	error:onError,
+     	//headers: { 'Authorization': 'Token ' + auth_token },
+     	});
+
+  function onComplete(data, textStatus, jqXHR)
+  {
+    if (data.status && (data.status == 'ok'))
+    {
+      $('#idRespStatus').text(data.status);
+      getProductsList();
+    }
+    else
+    {
+      $('#idRespStatus').html('fail, ' + JSON.stringify(data));
+    }
+  }
+
+  function onError(XMLHttpRequest, textStatus, errorThrown)
+  {
+    $('#idRespStatus').html(JSON.stringify(XMLHttpRequest.responseJSON));
+  }
+}
+
+
+
+function genRespTable(arr)
+{
+  res = '';
+  if (arr.length > 0)
+  {
+    res += '<table class="contentTable">';
+    res += '<tr>';
+    var keys = Object.keys(arr[0]);
+    for (k in keys)
+      res += '<td><b>'+keys[k]+'</b></td>';
+    res += '<td></td>';
+    res += '<td></td>';
+    res += '</tr>';
+    for (i in arr)
+    {
+      res += '<tr>';
+      var row = arr[i];
+      for (k in keys)
+      {
+        key = keys[k];
+        res += '<td>'+row[key]+'</td>';
+      }
+      res += '<td><b><a href="javascript:void(0)">edit</a></b></td>';
+      res += '<td><b><a href="javascript:void(0)" onclick="javascript:deleteProduct('+row['Id']+')">delete</a></b></td>';
+      res += '</tr>';
+    }
+    res += '</table>';
+  }
+  else
+  {
+    res += '<span>no data</span>';
+  }
+  return res;
+}
+
+
+
 function getProductsList()
 {
   $('#idRespStatus').html('loading... please wait...');
@@ -27,7 +103,57 @@ function getProductsList()
     if (data.status && (data.status == 'ok'))
     {
       $('#idRespStatus').text(data.status);
-      $('#idProductsList').text(data.answer);
+      $('#idProductsList').html(genRespTable(data.answer));
+    }
+    else
+    {
+      $('#idRespStatus').html('fail, ' + JSON.stringify(data));
+    }
+  }
+
+  function onError(XMLHttpRequest, textStatus, errorThrown)
+  {
+    $('#idRespStatus').html(JSON.stringify(XMLHttpRequest.responseJSON));
+  }
+}
+
+
+
+function addNewProduct()
+{
+  $('#idRespStatus').html('loading... please wait...');
+
+  var params = {};
+  params.product = {}
+  params.product.Name_rus = $("#idNew_Name_rus").val();
+  params.product.Name_eng = $("#idNew_Name_eng").val();
+  params.product.Photo_url = $("#idNew_Photo_url").val();
+  params.product.Year = $("#idNew_Year").val();
+  params.product.Vendor_code = $("#idNew_Vendor_code").val();
+  params.product.Country = $("#idNew_Country").val();
+  params.product.Alc_vol = $("#idNew_Alc_vol").val();
+  params.product.Capacity = $("#idNew_Capacity").val();
+  params.product.Description = $("#idNew_Description").val();
+  params.product.Grape_sort = $("#idNew_Grape_sort").val();
+  params.product.Price = $("#idNew_Price").val();
+
+  $.ajax({
+     	method:'post',
+     	contentType: 'application/json; charset=utf-8',
+     	data:JSON.stringify(params),
+     	dataType: 'json',
+     	url:'/testapi/add_new_product/',
+     	success:onComplete,
+     	error:onError,
+     	//headers: { 'Authorization': 'Token ' + auth_token },
+     	});
+
+  function onComplete(data, textStatus, jqXHR)
+  {
+    if (data.status && (data.status == 'ok'))
+    {
+      $('#idRespStatus').text(data.status);
+      getProductsList();
     }
     else
     {
@@ -45,13 +171,36 @@ function getProductsList()
 
 function main()
 {
+  getProductsList();
 }
 
 </script>
 
 
 <button onclick="javascript:getProductsList();">get_products_list</button>
+<br>
+<br>
 <div id="idProductsList"></div>
+<br>
+<a href="javascript:void(0)" onclick="javascript:$('#idNewProduct').toggle();">add_new_product...</a>
+<div id="idNewProduct" style="display:none;"><div style="display:inline-block; border: 1px solid black;">
+  <h5>add_new_product</h5>
+  <table>
+    <tr><td>Id</td><td>autoincrement</td></tr>
+    <tr><td>Name_rus</td><td><input id="idNew_Name_rus" type="text" value=""/></td></tr>
+    <tr><td>Name_eng</td><td><input id="idNew_Name_eng" type="text" value=""/></td></tr>
+    <tr><td>Photo_url</td><td><input id="idNew_Photo_url" type="text" value=""/></td></tr>
+    <tr><td>Year</td><td><input id="idNew_Year" type="text" value=""/></td></tr>
+    <tr><td>Vendor_code</td><td><input id="idNew_Vendor_code" type="text" value=""/></td></tr>
+    <tr><td>Country</td><td><input id="idNew_Country" type="text" value=""/></td></tr>
+    <tr><td>Alc_vol</td><td><input id="idNew_Alc_vol" type="text" value=""/></td></tr>
+    <tr><td>Capacity</td><td><input id="idNew_Capacity" type="text" value=""/></td></tr>
+    <tr><td>Description</td><td><input id="idNew_Description" type="text" value=""/></td></tr>
+    <tr><td>Grape_sort</td><td><input id="idNew_Grape_sort" type="text" value=""/></td></tr>
+    <tr><td>Price</td><td><input id="idNew_Price" type="text" value=""/></td></tr>
+  </table>
+  <button onclick="javascript:addNewProduct();">add</button>
+</div></div>
 
 
 

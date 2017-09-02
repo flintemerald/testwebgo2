@@ -22,6 +22,8 @@ func routeUrls(cfg Config) {
   http.Handle("/testapi/test1/", test1Api())
   http.Handle("/testapi/get_products_list/", getProductsListApi())
   http.Handle("/testapi/get_product/", getProductApi())
+  http.Handle("/testapi/add_new_product/", addNewProductApi())
+  http.Handle("/testapi/delete_product/", deleteProductApi())
 }
 
 
