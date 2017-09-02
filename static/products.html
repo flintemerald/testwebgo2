@@ -1,0 +1,64 @@
+<h1>products</h1>
+
+<link rel="stylesheet" href="style.css"> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="jquery.cookie.js"></script>
+<script type="text/javascript">
+
+function getProductsList()
+{
+  $('#idRespStatus').html('loading... please wait...');
+
+  var params = {};
+
+  $.ajax({
+     	method:'post',
+     	contentType: 'application/json; charset=utf-8',
+     	data:JSON.stringify(params),
+     	dataType: 'json',
+     	url:'/testapi/get_products_list/',
+     	success:onComplete,
+     	error:onError,
+     	//headers: { 'Authorization': 'Token ' + auth_token },
+     	});
+
+  function onComplete(data, textStatus, jqXHR)
+  {
+    if (data.status && (data.status == 'ok'))
+    {
+      $('#idRespStatus').text(data.status);
+      $('#idProductsList').text(data.answer);
+    }
+    else
+    {
+      $('#idRespStatus').html('fail, ' + JSON.stringify(data));
+    }
+  }
+
+  function onError(XMLHttpRequest, textStatus, errorThrown)
+  {
+    $('#idRespStatus').html(JSON.stringify(XMLHttpRequest.responseJSON));
+  }
+}
+
+
+
+function main()
+{
+}
+
+</script>
+
+
+<button onclick="javascript:getProductsList();">get_products_list</button>
+<div id="idProductsList"></div>
+
+
+
+<br>
+<br>
+<div id="idRespStatus"></div>
+
+<script type="text/javascript">
+main();
+</script>
