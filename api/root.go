@@ -16,14 +16,14 @@ type Config struct {
 
 
 func routeUrls(cfg Config) {
-  http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(cfg.StaticPath))))
+  http.Handle("/static3/", http.StripPrefix("/static3/", http.FileServer(http.Dir(cfg.StaticPath))))
   http.Handle("/", indexHandler())
 
-  http.Handle("/testapi/test1/", test1Api())
-  http.Handle("/testapi/get_products_list/", getProductsListApi())
-  http.Handle("/testapi/get_product/", getProductApi())
-  http.Handle("/testapi/save_product/", saveProductApi())
-  http.Handle("/testapi/delete_product/", deleteProductApi())
+  http.Handle("/testapi3/test1/", test1Api())
+  http.Handle("/testapi3/get_products_list/", getProductsListApi())
+  http.Handle("/testapi3/get_product/", getProductApi())
+  http.Handle("/testapi3/save_product/", saveProductApi())
+  http.Handle("/testapi3/delete_product/", deleteProductApi())
 }
 
 
